@@ -1,0 +1,36 @@
+services:
+  app:
+    image: tech-challenge-fiap-01:latest
+    container_name: ms-users
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/fiapdb
+      SPRING_DATASOURCE_USERNAME: fiapuser
+      SPRING_DATASOURCE_PASSWORD: fiappass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      - db
+    networks:
+      - fiap-network
+
+  db:
+    image: postgres:16.2
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: fiapdb
+      POSTGRES_USER: fiapuser
+      POSTGRES_PASSWORD: fiappass
+    ports:
+      - "5444:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - fiap-network
+
+volumes:
+  pgdata:
+
+networks:
+  fiap-network:
+    driver: bridge
