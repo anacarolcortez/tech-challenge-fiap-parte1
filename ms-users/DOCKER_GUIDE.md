@@ -6,20 +6,21 @@ This project uses Docker and Docker Compose with automatic image versioning.
 
 ### 📁 Docker-Related Files
 
-| File              | Purpose                                                           |
-|------------------|-------------------------------------------------------------------|
-| `Dockerfile`      | Defines how the application image is built.                      |
-| `docker-compose.yml` | Orchestrates services (app + PostgreSQL database).                |
-| `build.sh`        | Script to build Docker images using semantic versioning logic.   |
+| File                 | Purpose                                                                                                                                                            |
+|----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Dockerfile`         | Defines how the application image is built.                                                                                                                        |
+| `docker-compose.yml` | Orchestrates services (app + PostgreSQL database).                                                                                                                 |
+| `app-build.sh`           | Script to build Docker images using semantic versioning logic.                                                                                                     |
+| `.env`               | Stores environment variables used by Docker Compose. (Template defined in the .env.example file. Must be created at the same level as the docker-compose.yml file) |
 
 ---
 
 ### 🧱 How to Build the Image
 
-Use the `build.sh` script to build your image with automatic versioning:
+Use the `app-build.sh` script to build your image with automatic versioning:
 
 ```bash
-chmod +x build.sh
+chmod +x app-build.sh
 ./build.sh             # Increments patch (x.y.z → x.y.(z+1)) – default
 ./build.sh minor       # Increments minor (x.y.z → x.(y+1).0)
 ./build.sh major       # Increments major (x.y.z → (x+1).0.0)

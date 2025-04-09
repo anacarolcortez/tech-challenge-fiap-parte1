@@ -4,27 +4,39 @@ services:
     container_name: ms-users
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/fiapdb
-      SPRING_DATASOURCE_USERNAME: fiapuser
-      SPRING_DATASOURCE_PASSWORD: fiappass
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    restart: no
     networks:
       - fiap-network
 
   db:
-    image: postgres:16.2
+    image: postgres:16.8-alpine
     container_name: postgres-db
+    env_file:
+      - .env
     environment:
       POSTGRES_DB: fiapdb
-      POSTGRES_USER: fiapuser
-      POSTGRES_PASSWORD: fiappass
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
     ports:
       - "5444:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    restart: no
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d fiapdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - fiap-network
 
