@@ -16,6 +16,14 @@ spring:
   sql:
     init:
       mode: always
+  flyway:
+    url: ${SPRING_DATASOURCE_URL}
+    user: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    driver-class-name: org.postgresql.Driver
+    connect-retries: 3
 
 server:
   port: ${SERVER_PORT:8080}
