@@ -62,5 +62,5 @@ This will:
 ### 🧼 Shutting Down
 
 ```bash
-docker-compose down
+docker compose down
 ```
