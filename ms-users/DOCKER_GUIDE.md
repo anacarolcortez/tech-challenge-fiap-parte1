@@ -48,7 +48,7 @@ The script will:
 Once the image is built, run:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 This will:
