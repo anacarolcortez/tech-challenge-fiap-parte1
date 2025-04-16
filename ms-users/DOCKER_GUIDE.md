@@ -48,7 +48,7 @@ The script will:
 Once the image is built, run:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 This will:
@@ -62,5 +62,5 @@ This will:
 ### 🧼 Shutting Down
 
 ```bash
-docker-compose down
+docker compose down
 ```

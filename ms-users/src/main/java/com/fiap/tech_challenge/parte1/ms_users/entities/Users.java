@@ -3,8 +3,10 @@ package com.fiap.tech_challenge.parte1.ms_users.entities;
 
 import java.util.List;
 import java.util.Date;
+import java.util.UUID;
 
 public class Users {
+    private UUID id;
     private String name;
     private String email;
     private String login;
@@ -14,7 +16,8 @@ public class Users {
     private Boolean status;
     private Role role;
 
-    public Users(String name, String email, String login, String password, Date dateLastChange, List address, Boolean status, Role role) {
+    public Users(UUID id, String name, String email, String login, String password, Date dateLastChange, List<Address> address, Boolean status, Role role) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.login = login;
@@ -25,8 +28,8 @@ public class Users {
         this.role = role;
     }
 
-    public Users() {
-
+    public UUID getId() {
+        return id;
     }
 
     public String getName() {
