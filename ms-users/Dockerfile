@@ -22,6 +22,7 @@ RUN chown -R appuser:appgroup /app
 USER appuser
 
 EXPOSE 8080
+EXPOSE 5005
 
 # Security: limit memory, stack size, and CPU usage
-ENTRYPOINT ["java", "-Xss512k", "-Xms256m", "-Xmx512m", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-Xss512k", "-Xms256m", "-Xmx512m", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]
