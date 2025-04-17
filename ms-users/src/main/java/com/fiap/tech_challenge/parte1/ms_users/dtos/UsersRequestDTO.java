@@ -5,6 +5,5 @@ public class UsersRequestDTO {
     public String email;
     public String login;
     public String password;
-    public Boolean status;
     public String role;
 }

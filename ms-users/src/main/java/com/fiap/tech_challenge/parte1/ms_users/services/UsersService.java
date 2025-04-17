@@ -26,7 +26,6 @@ public class UsersService {
                 dto.password,
                 new Date(),                    // data atual
                 new ArrayList<>(),             // lista de endereços vazia
-                dto.status,
                 Role.valueOf(dto.role)
         );
 

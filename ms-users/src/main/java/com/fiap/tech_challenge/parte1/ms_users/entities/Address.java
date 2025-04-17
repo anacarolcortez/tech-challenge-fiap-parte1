@@ -3,7 +3,7 @@ package com.fiap.tech_challenge.parte1.ms_users.entities;
 import java.util.UUID;
 
 public class Address {
-    private UUID id;
+    private final UUID id;
     private String zipcode;
     private String street;
     private int number;
@@ -12,8 +12,8 @@ public class Address {
     private String city;
     private String state;
 
-    public Address(UUID id, String zipcode, String street, int number, String complement, String neighborhood, String city, String state) {
-        this.id = id;
+    public Address(String zipcode, String street, int number, String complement, String neighborhood, String city, String state) {
+        this.id = UUID.randomUUID();
         this.zipcode = zipcode;
         this.street = street;
         this.number = number;

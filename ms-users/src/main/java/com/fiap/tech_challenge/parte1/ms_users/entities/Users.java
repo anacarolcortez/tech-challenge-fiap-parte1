@@ -16,15 +16,15 @@ public class Users {
     private Boolean status;
     private Role role;
 
-    public Users(UUID id, String name, String email, String login, String password, Date dateLastChange, List<Address> address, Boolean status, Role role) {
-        this.id = id;
+    public Users(String name, String email, String login, String password, Date dateLastChange, List<Address> address, Role role) {
+        this.id = UUID.randomUUID();
         this.name = name;
         this.email = email;
         this.login = login;
         this.password = password;
         this.dateLastChange = dateLastChange;
         this.address = address;
-        this.status = status;
+        this.status = true;
         this.role = role;
     }
 

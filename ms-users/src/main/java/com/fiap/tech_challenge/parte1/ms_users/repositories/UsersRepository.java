@@ -17,14 +17,16 @@ public class UsersRepository {
 
     public void save(Users user) {
         jdbcClient.sql("""
-                INSERT INTO users (name, email, login, password, date_last_change, status, role)
-                VALUES (:name, :email, :login, :password, :dateLastChange, :status, :role)
-                """)
-            .param("name", user.getName())
+            INSERT INTO users (name, email, login, password, last_modified_date, status, role)
+            VALUES (:name, :email, :login, :password, :last_modified_date, :status, CAST(:role AS role_type))
+        """)
+
+
+                .param("name", user.getName())
             .param("email", user.getEmail())
             .param("login", user.getLogin())
             .param("password", user.getPassword())
-            .param("dateLastChange", user.getDateLastChange())
+            .param("last_modified_date", user.getDateLastChange())
             .param("status", user.getStatus())
             .param("role", user.getRole().name())
             .update();
