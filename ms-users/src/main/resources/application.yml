@@ -25,5 +25,11 @@ spring:
     driver-class-name: org.postgresql.Driver
     connect-retries: 3
 
+logging:
+  level:
+    org.springframework.jdbc.core: DEBUG
+    org.springframework.jdbc.support: DEBUG
+    org.springframework.jdbc.datasource: DEBUG
+
 server:
   port: ${SERVER_PORT:8080}

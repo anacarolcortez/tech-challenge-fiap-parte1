@@ -12,8 +12,7 @@ public class Address {
     private String city;
     private String state;
 
-    public Address(UUID id, String zipcode, String street, int number, String complement, String neighborhood, String city, String state) {
-        this.id = id;
+    public Address(String zipcode, String street, int number, String complement, String neighborhood, String city, String state) {
         this.zipcode = zipcode;
         this.street = street;
         this.number = number;
@@ -21,6 +20,9 @@ public class Address {
         this.neighborhood = neighborhood;
         this.city = city;
         this.state = state;
+    }
+
+    public Address() {
     }
 
     public UUID getId() {
