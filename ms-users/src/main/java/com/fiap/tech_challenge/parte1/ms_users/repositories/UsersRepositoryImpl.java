@@ -6,6 +6,7 @@ import com.fiap.tech_challenge.parte1.ms_users.entities.Users;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,6 +32,17 @@ public class UsersRepositoryImpl implements UsersRepository {
                 .param("id", id)
                 .query(Users.class)
                 .optional();
+    }
+
+    @Override
+    public List<Users> findAll(int size, int offset) {
+        return jdbcClient.sql("""
+                        SELECT * FROM users LIMIT :size OFFSET :offset
+                       """)
+                .param("size",size)
+                .param("offset", offset)
+                .query(Users.class)
+                .list();
     }
 
     public void save(Users user) {

@@ -1,0 +1,67 @@
+{
+	"info": {
+		"_postman_id": "fdcff3ae-99b4-475a-8194-8089fe4fa7be",
+		"name": "ms-users",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "43827028",
+		"_collection_link": "https://vitorfidelis-6408437.postman.co/workspace/Vitor-Fidelis's-Workspace~cc0e5aac-a4db-444f-8d99-abd2609e9db7/collection/43827028-fdcff3ae-99b4-475a-8194-8089fe4fa7be?action=share&source=collection_link&creator=43827028"
+	},
+	"item": [
+		{
+			"name": "POST users",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"teste\",\r\n    \"email\":\"teste@gmail.com\",\r\n    \"login\":\"testelogin\",\r\n    \"password\":\"teste123\",\r\n    \"role\": \"CLIENT\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/users"
+			},
+			"response": []
+		},
+		{
+			"name": "GET user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8080/users/{id}"
+			},
+			"response": []
+		},
+		{
+			"name": "GET users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users?page=1&size=5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
