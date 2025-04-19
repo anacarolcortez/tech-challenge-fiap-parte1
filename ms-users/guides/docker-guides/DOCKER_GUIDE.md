@@ -21,9 +21,9 @@ Use the `app-build.sh` script to build your image with automatic versioning:
 
 ```bash
 chmod +x app-build.sh
-./build.sh             # Increments patch (x.y.z → x.y.(z+1)) – default
-./build.sh minor       # Increments minor (x.y.z → x.(y+1).0)
-./build.sh major       # Increments major (x.y.z → (x+1).0.0)
+./app-build.sh             # Increments patch (x.y.z → x.y.(z+1)) – default
+./app-build.sh minor       # Increments minor (x.y.z → x.(y+1).0)
+./app-build.sh major       # Increments major (x.y.z → (x+1).0.0)
 ```
 
 The script will:
