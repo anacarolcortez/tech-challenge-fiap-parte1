@@ -8,6 +8,7 @@ import com.fiap.tech_challenge.parte1.ms_users.entities.Users;
 import com.fiap.tech_challenge.parte1.ms_users.exceptions.UserNotFoundException;
 import com.fiap.tech_challenge.parte1.ms_users.repositories.UsersRepository;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 import java.util.UUID;
 
@@ -27,6 +28,12 @@ public class UsersService {
                 .findById(id)
                 .orElseThrow(() -> new UserNotFoundException(String.format("User with id %s not found.", id)));
         return userMapper.toResponseDTO(users);
+    }
+
+    public List<UsersResponseDTO> findAllUsers(int size, int page){
+        var offset = (page - 1) * size;
+        var listUsers = usersRepository.findAll(size, offset);
+        return  userMapper.toResponseDTO(listUsers);
     }
 
     public void createUser(UsersRequestDTO dto) {
