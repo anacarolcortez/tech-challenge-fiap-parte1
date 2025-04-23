@@ -62,6 +62,40 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "PUT update user",
+			"request": {
+			  "method": "PUT",
+			  "header": [
+				{
+				  "key": "Content-Type",
+				  "value": "application/json"
+				}
+			  ],
+			  "body": {
+				"mode": "raw",
+				"raw": "{\n    \"name\": \"updated name\",\n    \"email\": \"updated@email.com\",\n    \"login\": \"updatedLogin\",\n    \"password\": \"newpass123\",\n    \"role\": \"CLIENT\"\n}",
+				"options": {
+				  "raw": {
+					"language": "json"
+				  }
+				}
+			  },
+			  "url": {
+				"raw": "http://localhost:8080/users/{Id}",
+				"protocol": "http",
+				"host": [
+				  "localhost"
+				],
+				"port": "8080",
+				"path": [
+				  "users",
+				  "{{userId}}"
+				]
+			  }
+			},
+			"response": []
 		}
 	]
 }

@@ -11,4 +11,6 @@ public interface UsersRepository {
     Optional<Users> findById(UUID id);
     List<Users> findAll(int size, int offset);
     void save(Users user);
+    void update(UUID id, Users user);
+
 }

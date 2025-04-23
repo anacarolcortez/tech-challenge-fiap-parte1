@@ -30,23 +30,57 @@ public class UsersService {
         return userMapper.toResponseDTO(users);
     }
 
-    public List<UsersResponseDTO> findAllUsers(int size, int page){
+    public List<UsersResponseDTO> findAllUsers(int size, int page) {
         var offset = (page - 1) * size;
         var listUsers = usersRepository.findAll(size, offset);
-        return  userMapper.toResponseDTO(listUsers);
+        return userMapper.toResponseDTO(listUsers);
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.trim().isEmpty();
     }
 
     public void createUser(UsersRequestDTO dto) {
+        if (isBlank(dto.name()) || isBlank(dto.email()) || isBlank(dto.login())
+                || isBlank(dto.password()) || isBlank(dto.role())) {
+            throw new IllegalArgumentException("Missing or empty required fields: name, email, login, password, role");
+        }
+
+        Role role;
+        try {
+            role = Role.valueOf(dto.role());
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException("Invalid role value. Accepted values: CLIENT, ADMIN, etc.");
+        }
+
         Users user = new Users(
                 dto.name(),
                 dto.email(),
                 dto.login(),
                 dto.password(),
-                Role.valueOf(dto.role())
-        );
+                role);
+
         usersRepository.save(user);
     }
+
+    public UsersResponseDTO updateUser(UUID id, UsersRequestDTO dto) {
+        if (isBlank(dto.name()) || isBlank(dto.email()) || isBlank(dto.login())
+                || isBlank(dto.password()) || isBlank(dto.role())) {
+            throw new IllegalArgumentException("Missing or empty required fields: name, email, login, password, role");
+        }
+
+        usersRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User with id %s not found.".formatted(id)));
+
+        Users updatedUser = new Users(
+                dto.name(),
+                dto.email(),
+                dto.login(),
+                dto.password(),
+                Role.valueOf(dto.role()));
+
+        usersRepository.update(id, updatedUser);
+        return userMapper.toResponseDTO(updatedUser);
+    }
+
 }
-
-
-

@@ -43,6 +43,17 @@ public class UsersController {
     public ResponseEntity<String> create(@RequestBody UsersRequestDTO dto) {
         logger.info("/createUser -> " + dto);
         service.createUser(dto);
-        return ResponseEntity.ok("Usuário criado com sucesso!");
+        return ResponseEntity.ok("User created successfully.");
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UsersResponseDTO> update(
+        @PathVariable UUID id,
+        @RequestBody UsersRequestDTO dto) {
+    logger.info("/updateUser -> id: " + id + ", dto: " + dto);
+    UsersResponseDTO updatedUser = service.updateUser(id, dto);
+    return ResponseEntity.ok(updatedUser);
+    
+    }
+
 }

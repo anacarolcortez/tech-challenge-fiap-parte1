@@ -45,6 +45,7 @@ public class UsersRepositoryImpl implements UsersRepository {
                 .list();
     }
 
+    @Override
     public void save(Users user) {
         jdbcClient.sql("""
                         INSERT INTO users
@@ -61,5 +62,26 @@ public class UsersRepositoryImpl implements UsersRepository {
                 .param("role", user.getRole().name())
                 .update();
     }
+
+    @Override
+    public void update(UUID id, Users user) {
+    jdbcClient.sql("""
+            UPDATE users SET
+                name = :name,
+                email = :email,
+                login = :login,
+                password = :password,
+                role = CAST(:role AS role_type)
+            WHERE id = :id
+        """)
+        .param("id", id)
+        .param("name", user.getName())
+        .param("email", user.getEmail())
+        .param("login", user.getLogin())
+        .param("password", user.getPassword())
+        .param("role", user.getRole().name())
+        .update();
+    }
+
 
 }
