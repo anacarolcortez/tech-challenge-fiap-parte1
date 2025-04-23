@@ -1,4 +1,4 @@
-package com.fiap.tech_challenge.parte1.ms_users;
+package com.fiap.tech_challenge.parte1.ms_users.mappers;
 
 import com.fiap.tech_challenge.parte1.ms_users.dtos.UsersResponseDTO;
 import com.fiap.tech_challenge.parte1.ms_users.entities.Users;
@@ -10,7 +10,13 @@ import java.util.List;
 public class UserMapper {
 
     public UsersResponseDTO toResponseDTO(Users users) {
-        return new UsersResponseDTO(users.getId(), users.getName(), users.getEmail(), users.getLogin(), users.getRole().name());
+        return new UsersResponseDTO(
+                users.getId(),
+                users.getName(),
+                users.getEmail(),
+                users.getLogin(),
+                users.getRole().name(),
+                users.getAddresses());
     }
 
     public List<UsersResponseDTO> toResponseDTO(List<Users> users) {

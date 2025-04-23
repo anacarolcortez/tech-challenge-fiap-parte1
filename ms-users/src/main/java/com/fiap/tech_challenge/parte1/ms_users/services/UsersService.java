@@ -1,6 +1,7 @@
 package com.fiap.tech_challenge.parte1.ms_users.services;
 
-import com.fiap.tech_challenge.parte1.ms_users.UserMapper;
+import com.fiap.tech_challenge.parte1.ms_users.entities.Address;
+import com.fiap.tech_challenge.parte1.ms_users.mappers.UserMapper;
 import com.fiap.tech_challenge.parte1.ms_users.dtos.UsersRequestDTO;
 import com.fiap.tech_challenge.parte1.ms_users.dtos.UsersResponseDTO;
 import com.fiap.tech_challenge.parte1.ms_users.entities.Role;
@@ -17,16 +18,20 @@ public class UsersService {
 
     private final UsersRepository usersRepository;
     private final UserMapper userMapper;
+    private final AddressesService addressesService;
 
-    public UsersService(UsersRepository usersRepository, UserMapper userMapper) {
+    public UsersService(UsersRepository usersRepository, UserMapper userMapper, AddressesService addressesService) {
         this.usersRepository = usersRepository;
         this.userMapper = userMapper;
+        this.addressesService = addressesService;
     }
 
     public UsersResponseDTO findById(UUID id) {
         Users users = usersRepository
                 .findById(id)
                 .orElseThrow(() -> new UserNotFoundException(String.format("User with id %s not found.", id)));
+        List<Address> addressList = addressesService.findAllByUserId(id);
+        users.setAddress(addressList);
         return userMapper.toResponseDTO(users);
     }
 
