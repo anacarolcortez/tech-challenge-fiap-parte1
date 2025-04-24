@@ -4,13 +4,23 @@ set -e
 
 APP_BUILD_SCRIPT="./app-build.sh"
 INCREMENT_LEVEL="${1:-patch}"
+SKIP_TESTS=false
 M2_REPO="$HOME/.m2/repository"  # Local Maven repository on your host system
+
+# Check for optional --skip-tests argument
+if [[ "$2" == "--skip-tests" ]]; then
+  SKIP_TESTS=true
+fi
 
 # === Functions ===
 
 print_help() {
-  echo "📘 Usage: ./local-continuous-integration.sh [patch|minor|major]"
-  echo "Runs a full local CI: stops services, builds image, runs Maven tests, restarts services."
+  echo "📘 Usage: ./local-continuous-integration.sh [patch|minor|major] [--skip-tests]"
+  echo "Runs a full local CI: stops services, builds image, optionally runs Maven tests, and restarts services."
+  echo ""
+  echo "Arguments:"
+  echo "  patch|minor|major   Version increment level (default: patch)"
+  echo "  --skip-tests         Skips JUnit Maven tests"
 }
 
 validate_increment_level() {
@@ -24,7 +34,6 @@ validate_increment_level() {
 run_maven_tests() {
   echo "🧪 Running Maven tests using Docker with Maven 3.9.6 and Eclipse Temurin 17..."
 
-  # Create a persistent volume for Maven's local repository
   docker run --rm \
     -v "$(pwd)":/app \
     -v "$M2_REPO":/root/.m2/repository \
@@ -62,7 +71,11 @@ docker compose down
 echo "🔨 Building Docker image with version increment: $INCREMENT_LEVEL"
 "$APP_BUILD_SCRIPT" "$INCREMENT_LEVEL"
 
-run_maven_tests
+if [ "$SKIP_TESTS" = false ]; then
+  run_maven_tests
+else
+  echo "⏭️  Skipping Maven tests as requested."
+fi
 
 echo "🚀 Starting Docker Compose services..."
 docker compose up -d
@@ -72,5 +85,5 @@ docker image prune -f
 
 echo ""
 echo "🎉 Local CI finished successfully!"
-echo "📦 Your app is built, tested, and running."
+echo "📦 Your app is built${SKIP_TESTS:+ (without tests)}, and running."
 echo "📜 View logs: docker compose logs -f"
