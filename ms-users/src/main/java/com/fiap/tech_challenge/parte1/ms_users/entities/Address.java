@@ -11,6 +11,7 @@ public class Address {
     private String neighborhood;
     private String city;
     private String state;
+    private String userId;
 
     public Address(String zipcode, String street, int number, String complement, String neighborhood, String city, String state) {
         this.zipcode = zipcode;
@@ -56,4 +57,9 @@ public class Address {
     public String getState() {
         return state;
     }
+
+    public String getUserId() {
+        return userId;
+    }
+
 }
