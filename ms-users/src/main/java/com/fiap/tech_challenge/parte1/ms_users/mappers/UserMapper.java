@@ -9,6 +9,12 @@ import java.util.List;
 @Component
 public class UserMapper {
 
+    private final AddressMapper addressMapper;
+
+    public UserMapper(AddressMapper addressMapper) {
+        this.addressMapper = addressMapper;
+    }
+
     public UsersResponseDTO toResponseDTO(Users users) {
         return new UsersResponseDTO(
                 users.getId(),
@@ -16,7 +22,7 @@ public class UserMapper {
                 users.getEmail(),
                 users.getLogin(),
                 users.getRole().name(),
-                users.getAddresses());
+                addressMapper.toAddressRequestDTO(users.getAddresses()));
     }
 
     public List<UsersResponseDTO> toResponseDTO(List<Users> users) {

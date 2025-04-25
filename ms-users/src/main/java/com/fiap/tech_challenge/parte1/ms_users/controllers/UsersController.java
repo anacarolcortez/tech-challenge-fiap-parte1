@@ -3,6 +3,7 @@ package com.fiap.tech_challenge.parte1.ms_users.controllers;
 import com.fiap.tech_challenge.parte1.ms_users.dtos.UsersRequestDTO;
 import com.fiap.tech_challenge.parte1.ms_users.dtos.UsersResponseDTO;
 import com.fiap.tech_challenge.parte1.ms_users.services.UsersService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class UsersController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UsersResponseDTO> getById(@PathVariable UUID id) {
-        logger.info("/findById -> " + id);
+        logger.info("/findById -> {}", id);
         return ResponseEntity.ok(service.findById(id));
     }
 
@@ -34,14 +35,14 @@ public class UsersController {
             @RequestParam int size,
             @RequestParam int page
     ){
-        logger.info("/findAllUsers -> size: " + size + " , " + " offset: " + page);
+        logger.info("/findAllUsers -> size: {} ,  offset: {}", size, page);
         var allUsers = this.service.findAllUsers(size, page);
         return ResponseEntity.ok(allUsers);
     }
 
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody UsersRequestDTO dto) {
-        logger.info("/createUser -> " + dto);
+    public ResponseEntity<String> create(@RequestBody @Valid UsersRequestDTO dto) {
+        logger.info("/createUser -> {}", dto);
         service.createUser(dto);
         return ResponseEntity.ok("Usuário criado com sucesso!");
     }
