@@ -1,5 +1,6 @@
 package com.fiap.tech_challenge.parte1.ms_users.dtos;
 
+import java.util.List;
 import java.util.UUID;
 
 public record UsersResponseDTO(
@@ -7,6 +8,6 @@ public record UsersResponseDTO(
         String name,
         String email,
         String login,
-        String role
-) {
+        String role,
+        List<AddressResponseDTO> address) {
 }

@@ -65,4 +65,11 @@ public class Users {
         return role;
     }
 
+    public List<Address> getAddresses() {
+        return address;
+    }
+
+    public void setAddress(List<Address> address) {
+        this.address = address;
+    }
 }
