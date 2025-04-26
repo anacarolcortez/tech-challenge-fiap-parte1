@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tech-challenge-fiap-01-deployment
+spec:
+  replicas: 5
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 2
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: tech-challenge-fiap-01
+  template:
+    metadata:
+      labels:
+        app: tech-challenge-fiap-01
+    spec:
+      containers:
+        - name: tech-challenge-fiap-01
+          image: gabrielfiapadj/tech-challenge-fiap-01:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://db:5432/fiapdb
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: fiap-db-secret
+                  key: DB_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fiap-db-secret
+                  key: DB_PASS
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: update
+            - name: SERVER_PORT
+              value: "8080"
