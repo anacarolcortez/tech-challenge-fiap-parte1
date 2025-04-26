@@ -1,0 +1,103 @@
+type: collection.insomnia.rest/5.0
+name: "Fiap - Tech Challenge Part 1: Users"
+meta:
+  id: wrk_f178431c4083456da786dcccaa5bcacd
+  created: 1744846006408
+  modified: 1744923012923
+collection:
+  - url: http://localhost:8080/users
+    name: Create user
+    meta:
+      id: req_99a1a1eb883b4171866b92fb10f52fec
+      created: 1744846011964
+      modified: 1745539183656
+      isPrivate: false
+      sortKey: -1744846011964
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"name": "Gabriel 2442",
+        	"email": "asdasd12@email.com",
+        	"login": "gabri1e3l3244333223_user",
+        	"password": "gabriel33_pass",
+        	"role": "CLIENT",
+        	"address": [
+        		{
+        			"zipcode": "1482500",
+        			"street": "Rua Leopoldo Morandini",
+        			"number": "318",
+        			"complement": "Perto da praça",
+        			"neighborhood": "Nova Santa Lúcia",
+        			"city": "Santa Lúcia - SP",
+        			"state": "SP"
+        		}
+        	]
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.0.2
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8080/users/3adbc6e0-77d9-4a90-8853-2b4c679c3111
+    name: Retrieve user by ID
+    meta:
+      id: req_62b20b475f6f43a7911cde318ee64fa0
+      created: 1744943892394
+      modified: 1745537085724
+      isPrivate: false
+      sortKey: -1744943892394
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.0.2
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8080/users?size=19&page=1
+    name: Retrieve user list
+    meta:
+      id: req_76c631415b8a47eaae8ce33feb20582e
+      created: 1745367289099
+      modified: 1745539172183
+      isPrivate: false
+      sortKey: -1744933733286
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.0.2
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_c3f0675c7430b9e7e9829ed6a2f1991203c71ddb
+    created: 1744846006412
+    modified: 1744846006412
+environments:
+  name: Base Environment
+  meta:
+    id: env_c3f0675c7430b9e7e9829ed6a2f1991203c71ddb
+    created: 1744846006410
+    modified: 1744846006410
+    isPrivate: false
