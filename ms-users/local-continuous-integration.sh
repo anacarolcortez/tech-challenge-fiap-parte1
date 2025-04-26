@@ -85,5 +85,10 @@ docker image prune -f
 
 echo ""
 echo "🎉 Local CI finished successfully!"
-echo "📦 Your app is built${SKIP_TESTS:+ (without tests)}, and running."
+if [ "$SKIP_TESTS" = true ]; then
+  echo "📦 Your app is built (without tests), and running."
+else
+  echo "📦 Your app is built, tested and running."
+fi
+
 echo "📜 View logs: docker compose logs -f"
