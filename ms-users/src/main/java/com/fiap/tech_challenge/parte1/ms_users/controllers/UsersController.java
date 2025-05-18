@@ -46,4 +46,20 @@ public class UsersController {
         service.createUser(dto);
         return ResponseEntity.ok("Usuário criado com sucesso!");
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<String> toggleActivation(
+            @PathVariable UUID id,
+            @RequestParam boolean activate
+    ) {
+        logger.info("/toggleActivation -> id: {}, activate: {}", id, activate);
+
+        if (activate) {
+            service.reactivateUser(id);
+            return ResponseEntity.ok("Usuário ativado com sucesso!");
+        } else {
+            service.deactivateUser(id);
+            return ResponseEntity.ok("Usuário desativado com sucesso!");
+        }
+    }
 }

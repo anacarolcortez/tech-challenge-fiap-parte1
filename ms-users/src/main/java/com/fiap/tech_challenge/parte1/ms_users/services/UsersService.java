@@ -4,10 +4,10 @@ import com.fiap.tech_challenge.parte1.ms_users.dtos.UsersRequestDTO;
 import com.fiap.tech_challenge.parte1.ms_users.dtos.UsersResponseDTO;
 import com.fiap.tech_challenge.parte1.ms_users.entities.Address;
 import com.fiap.tech_challenge.parte1.ms_users.entities.Role;
-import com.fiap.tech_challenge.parte1.ms_users.entities.Users;
+import com.fiap.tech_challenge.parte1.ms_users.entities.User;
 import com.fiap.tech_challenge.parte1.ms_users.exceptions.UserNotFoundException;
 import com.fiap.tech_challenge.parte1.ms_users.mappers.UserMapper;
-import com.fiap.tech_challenge.parte1.ms_users.repositories.UsersRepository;
+import com.fiap.tech_challenge.parte1.ms_users.repositories.UserRepository;
 import com.fiap.tech_challenge.parte1.ms_users.services.validation.UsersValidationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,31 +21,31 @@ import java.util.stream.Collectors;
 @Service
 public class UsersService {
 
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final AddressesService addressesService;
     private final UsersValidationService usersValidationService;
 
-    public UsersService(UsersRepository usersRepository, UserMapper userMapper, AddressesService addressesService, UsersValidationService usersValidationService) {
-        this.usersRepository = usersRepository;
+    public UsersService(UserRepository userRepository, UserMapper userMapper, AddressesService addressesService, UsersValidationService usersValidationService) {
+        this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.addressesService = addressesService;
         this.usersValidationService = usersValidationService;
     }
 
     public UsersResponseDTO findById(UUID id) {
-        Users users = usersRepository
+        User user = userRepository
                 .findById(id)
                 .orElseThrow(() -> new UserNotFoundException(String.format("Usuário com id %s não encontrado.", id)));
         List<Address> addressList = addressesService.findAllByUserId(id);
-        users.setAddress(addressList);
-        return userMapper.toResponseDTO(users);
+        user.setAddress(addressList);
+        return userMapper.toResponseDTO(user);
     }
 
     public List<UsersResponseDTO> findAllUsers(int size, int page) {
         var offset = (page - 1) * size;
-        var listUsers = usersRepository.findAll(size, offset);
-        Set<UUID> userIdSet = listUsers.stream().map(Users::getId).collect(Collectors.toSet());
+        var listUsers = userRepository.findAll(size, offset);
+        Set<UUID> userIdSet = listUsers.stream().map(User::getId).collect(Collectors.toSet());
         Map<String, List<Address>> addressByUserMap = addressesService.findAllByUserIds(userIdSet);
 
         listUsers.forEach(user -> user.setAddress(addressByUserMap.getOrDefault(user.getId().toString(), List.of())));
@@ -67,14 +67,28 @@ public class UsersService {
 
     private UUID handleUserCreation(UsersRequestDTO dto) {
         usersValidationService.validateAll(dto);
-        Users user = new Users(
+        User user = new User(
                 dto.name(),
                 dto.email(),
                 dto.login(),
                 dto.password(),
                 Role.valueOf(dto.role())
         );
-        return usersRepository.save(user);
+        return userRepository.save(user);
+    }
+
+    public void deactivateUser(UUID id) {
+        User user = userRepository
+                .findById(id)
+                .orElseThrow(() -> new UserNotFoundException(String.format("Usuário com id %s não encontrado.", id)));
+        userRepository.deactivate(user.getId());
+    }
+
+    public void reactivateUser(UUID id) {
+        User user = userRepository
+                .findById(id)
+                .orElseThrow(() -> new UserNotFoundException(String.format("Usuário com id %s não encontrado.", id)));
+        userRepository.reactivate(user.getId());
     }
 }
 

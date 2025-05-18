@@ -1,10 +1,10 @@
 package com.fiap.tech_challenge.parte1.ms_users.services;
 
+import com.fiap.tech_challenge.parte1.ms_users.entities.User;
 import com.fiap.tech_challenge.parte1.ms_users.mappers.UserMapper;
 import com.fiap.tech_challenge.parte1.ms_users.dtos.UsersResponseDTO;
-import com.fiap.tech_challenge.parte1.ms_users.entities.Users;
 import com.fiap.tech_challenge.parte1.ms_users.exceptions.UserNotFoundException;
-import com.fiap.tech_challenge.parte1.ms_users.repositories.UsersRepository;
+import com.fiap.tech_challenge.parte1.ms_users.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,10 +20,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UsersServiceTest {
+public class UserServiceTest {
 
     @Mock
-    private UsersRepository usersRepository;
+    private UserRepository userRepository;
 
     @Mock
     private UserMapper userMapper;
@@ -37,16 +37,16 @@ public class UsersServiceTest {
     @Test
     void shouldThrowUserNotFoundExceptionWhenUserNotFound() {
         UUID id = UUID.randomUUID();
-        when(usersRepository.findById(id)).thenReturn(Optional.empty());
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
         assertThrows(UserNotFoundException.class, () -> usersService.findById(id));
     }
 
     @Test
     void shouldNotThrowUserNotFoundExceptionWhenUserFound() {
         UUID id = UUID.randomUUID();
-        when(usersRepository.findById(id)).thenReturn(Optional.of(new Users()));
+        when(userRepository.findById(id)).thenReturn(Optional.of(new User()));
         when(addressesService.findAllByUserId(id)).thenReturn(new ArrayList<>());
-        when(userMapper.toResponseDTO(any(Users.class))).thenReturn(new UsersResponseDTO(UUID.fromString("33c652a4-9af9-43a4-8414-f9227de41b38"), "NAME", "EMAIL@EMAIL.COM", "LOGIN", "CLIENT", new ArrayList<>()));
+        when(userMapper.toResponseDTO(any(User.class))).thenReturn(new UsersResponseDTO(UUID.fromString("33c652a4-9af9-43a4-8414-f9227de41b38"), "NAME", "EMAIL@EMAIL.COM", "LOGIN", "CLIENT", new ArrayList<>()));
         UsersResponseDTO usersResponseDTO = usersService.findById(id);
         assertEquals("33c652a4-9af9-43a4-8414-f9227de41b38", usersResponseDTO.id().toString());
         assertEquals("NAME", usersResponseDTO.name());
