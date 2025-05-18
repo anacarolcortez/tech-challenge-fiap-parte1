@@ -128,6 +128,4 @@ public class GlobalExceptionHandler {
         Map<String, Object> errorBody = buildErrorBody(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
         return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
     }
-
-
 }
