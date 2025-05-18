@@ -1,5 +1,6 @@
 package com.fiap.tech_challenge.parte1.ms_users.controllers;
 
+import com.fiap.tech_challenge.parte1.ms_users.dtos.ChangePasswordRequestDTO;
 import com.fiap.tech_challenge.parte1.ms_users.dtos.UsersRequestDTO;
 import com.fiap.tech_challenge.parte1.ms_users.dtos.UsersResponseDTO;
 import com.fiap.tech_challenge.parte1.ms_users.services.UsersService;
@@ -61,5 +62,15 @@ public class UsersController {
             service.deactivateUser(id);
             return ResponseEntity.ok("Usuário desativado com sucesso!");
         }
+    }
+
+    @PatchMapping("/{id}/password")
+    public ResponseEntity<String> changePassword(
+            @PathVariable UUID id,
+            @RequestBody @Valid ChangePasswordRequestDTO dto
+    ) {
+        logger.info("/changePassword -> id: {}", id);
+        service.changePassword(id, dto);
+        return ResponseEntity.ok("Senha alterada com sucesso!");
     }
 }

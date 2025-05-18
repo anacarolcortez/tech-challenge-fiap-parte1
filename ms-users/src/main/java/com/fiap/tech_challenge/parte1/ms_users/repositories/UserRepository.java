@@ -23,4 +23,6 @@ public interface UserRepository {
     void deactivate(UUID id);
 
     void reactivate(UUID id);
+
+    void changePassword(UUID id, String password);
 }

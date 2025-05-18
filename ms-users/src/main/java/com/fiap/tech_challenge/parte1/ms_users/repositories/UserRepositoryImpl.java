@@ -20,12 +20,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     public Optional<User> findById(UUID id) {
         return jdbcClient.sql("""
-                        SELECT
-                            id, name, email, login, role
-                        FROM
-                            users
-                        WHERE
-                            id = :id
+                        SELECT * FROM users
+                        WHERE id = :id
                         """)
                 .param("id", id)
                 .query(User.class)
@@ -112,6 +108,15 @@ public class UserRepositoryImpl implements UserRepository {
         jdbcClient.sql("UPDATE users SET active = :active, last_modified_date = :last_modified_date WHERE id = :id")
                 .param("id", id)
                 .param("active", true)
+                .param("last_modified_date", new java.sql.Timestamp(new java.util.Date().getTime()))
+                .update();
+    }
+
+    @Override
+    public void changePassword(UUID id, String password) {
+        jdbcClient.sql("UPDATE users SET password = :password, last_modified_date = :last_modified_date WHERE id = :id")
+                .param("id", id)
+                .param("password", password)
                 .param("last_modified_date", new java.sql.Timestamp(new java.util.Date().getTime()))
                 .update();
     }

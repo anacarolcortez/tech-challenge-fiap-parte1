@@ -1,14 +1,18 @@
 package com.fiap.tech_challenge.parte1.ms_users.services;
 
+import com.fiap.tech_challenge.parte1.ms_users.dtos.ChangePasswordRequestDTO;
 import com.fiap.tech_challenge.parte1.ms_users.dtos.UsersRequestDTO;
 import com.fiap.tech_challenge.parte1.ms_users.dtos.UsersResponseDTO;
 import com.fiap.tech_challenge.parte1.ms_users.entities.Address;
 import com.fiap.tech_challenge.parte1.ms_users.entities.Role;
 import com.fiap.tech_challenge.parte1.ms_users.entities.User;
+import com.fiap.tech_challenge.parte1.ms_users.exceptions.InvalidPasswordException;
 import com.fiap.tech_challenge.parte1.ms_users.exceptions.UserNotFoundException;
 import com.fiap.tech_challenge.parte1.ms_users.mappers.UserMapper;
 import com.fiap.tech_challenge.parte1.ms_users.repositories.UserRepository;
+import com.fiap.tech_challenge.parte1.ms_users.services.validation.PasswordValidationService;
 import com.fiap.tech_challenge.parte1.ms_users.services.validation.UsersValidationService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,12 +29,14 @@ public class UsersService {
     private final UserMapper userMapper;
     private final AddressesService addressesService;
     private final UsersValidationService usersValidationService;
+    private final PasswordValidationService passwordValidationService;
 
-    public UsersService(UserRepository userRepository, UserMapper userMapper, AddressesService addressesService, UsersValidationService usersValidationService) {
+    public UsersService(UserRepository userRepository, UserMapper userMapper, AddressesService addressesService, UsersValidationService usersValidationService, PasswordValidationService passwordValidationService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.addressesService = addressesService;
         this.usersValidationService = usersValidationService;
+        this.passwordValidationService = passwordValidationService;
     }
 
     public UsersResponseDTO findById(UUID id) {
@@ -89,6 +95,14 @@ public class UsersService {
                 .findById(id)
                 .orElseThrow(() -> new UserNotFoundException(String.format("Usuário com id %s não encontrado.", id)));
         userRepository.reactivate(user.getId());
+    }
+
+    public void changePassword(UUID id, @Valid ChangePasswordRequestDTO dto) {
+        User user = userRepository
+                .findById(id)
+                .orElseThrow(() -> new UserNotFoundException(String.format("Usuário com id %s não encontrado.", id)));
+        passwordValidationService.validate(dto, user.getPassword());
+        userRepository.changePassword(id, dto.newPassword());
     }
 }
 
