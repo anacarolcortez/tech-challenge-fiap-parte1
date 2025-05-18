@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "fdcff3ae-99b4-475a-8194-8089fe4fa7be",
+		"_postman_id": "ff4fe74c-6569-47f4-9d33-d4bdcb7cea18",
 		"name": "ms-users",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "43827028",
-		"_collection_link": "https://vitorfidelis-6408437.postman.co/workspace/Vitor-Fidelis's-Workspace~cc0e5aac-a4db-444f-8d99-abd2609e9db7/collection/43827028-fdcff3ae-99b4-475a-8194-8089fe4fa7be?action=share&source=collection_link&creator=43827028"
+		"_exporter_id": "38972353"
 	},
 	"item": [
 		{
@@ -14,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"teste\",\r\n    \"email\":\"teste@gmail.com\",\r\n    \"login\":\"testelogin\",\r\n    \"password\":\"teste123\",\r\n    \"role\": \"CLIENT\"\r\n}",
+					"raw": "{\r\n  \"name\": \"Maria Oliveira\",\r\n  \"email\": \"maria.oliveira@email.com\",\r\n  \"login\": \"mariaoliv\",\r\n  \"password\": \"SenhaForte123!\",\r\n  \"role\": \"OWNER\",\r\n  \"address\": [\r\n    {\r\n      \"zipcode\": \"12345-678\",\r\n      \"street\": \"Av. Brasil\",\r\n      \"number\": 250,\r\n      \"complement\": \"Casa 1\",\r\n      \"neighborhood\": \"Centro\",\r\n      \"city\": \"Rio de Janeiro\",\r\n      \"state\": \"RJ\"\r\n    }\r\n  ]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -22,6 +21,59 @@
 					}
 				},
 				"url": "http://localhost:8080/users"
+			},
+			"response": []
+		},
+		{
+			"name": "ACTIVATE/DEACTIVATE users",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/users/{id}?activate=false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"{id}"
+					],
+					"query": [
+						{
+							"key": "activate",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CHANGE PASSWORD",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"oldPassword\": \"SenhaForte123!\",\n    \"newPassword\": \"NovaSenhaForte123!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/users/{id}/password"
 			},
 			"response": []
 		},
