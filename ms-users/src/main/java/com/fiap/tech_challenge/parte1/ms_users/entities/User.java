@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-public class Users {
+public class User {
     private UUID id;
     private String name;
     private String email;
@@ -13,20 +13,20 @@ public class Users {
     private String password;
     private Date dateLastChange;
     private List<Address> address;
-    private Boolean status;
+    private Boolean active;
     private Role role;
 
-    public Users(String name, String email, String login, String password, Role role) {
+    public User(String name, String email, String login, String password, Role role) {
         this.name = name;
         this.email = email;
         this.login = login;
         this.password = password;
         this.dateLastChange = new Date();
-        this.status = true;
+        this.active = true;
         this.role = role;
     }
 
-    public Users() {
+    public User() {
     }
 
     public UUID getId() {
@@ -57,8 +57,8 @@ public class Users {
         return address;
     }
 
-    public Boolean getStatus() {
-        return status;
+    public Boolean getActive() {
+        return active;
     }
 
     public Role getRole() {

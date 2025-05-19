@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.fiap.tech-challenge.parte1</groupId>
-	<artifactId>ms-users</artifactId>
+	<artifactId>ms-user</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ms-users</name>
+	<name>ms-user</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>

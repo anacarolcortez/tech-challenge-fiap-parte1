@@ -119,5 +119,13 @@ public class GlobalExceptionHandler {
         return errorBody;
     }
 
+    @ExceptionHandler(InvalidPasswordException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> handleInvalidPasswordException(
+            InvalidPasswordException ex,
+            HttpServletRequest request) {
 
+        Map<String, Object> errorBody = buildErrorBody(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+        return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
+    }
 }
