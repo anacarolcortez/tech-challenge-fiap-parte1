@@ -5,22 +5,31 @@ set -e
 APP_BUILD_SCRIPT="./app-build.sh"
 INCREMENT_LEVEL="${1:-patch}"
 SKIP_TESTS=false
-M2_REPO="$HOME/.m2/repository"  # Local Maven repository on your host system
+FORCE_NO_CACHE=false
+M2_REPO="$HOME/.m2/repository"
 
-# Check for optional --skip-tests argument
-if [[ "$2" == "--skip-tests" ]]; then
-  SKIP_TESTS=true
-fi
+# Handle second or third argument as options
+for arg in "$@"; do
+  case $arg in
+    --skip-tests)
+      SKIP_TESTS=true
+      ;;
+    --no-cache)
+      FORCE_NO_CACHE=true
+      ;;
+  esac
+done
 
 # === Functions ===
 
 print_help() {
-  echo "📘 Usage: ./local-continuous-integration.sh [patch|minor|major] [--skip-tests]"
+  echo "📘 Usage: ./local-continuous-integration.sh [patch|minor|major] [--skip-tests] [--no-cache]"
   echo "Runs a full local CI: stops services, builds image, optionally runs Maven tests, and restarts services."
   echo ""
   echo "Arguments:"
   echo "  patch|minor|major   Version increment level (default: patch)"
   echo "  --skip-tests         Skips JUnit Maven tests"
+  echo "  --no-cache           Does not mount local Maven repository (~/.m2) to avoid stale dependency issues"
 }
 
 validate_increment_level() {
@@ -34,11 +43,21 @@ validate_increment_level() {
 run_maven_tests() {
   echo "🧪 Running Maven tests using Docker with Maven 3.9.6 and Eclipse Temurin 17..."
 
-  docker run --rm \
-    -v "$(pwd)":/app \
-    -v "$M2_REPO":/root/.m2/repository \
-    -w /app \
-    maven:3.9.6-eclipse-temurin-17 mvn test
+  DOCKER_ARGS=(
+    -v "$(pwd)":/app
+    -w /app
+    --rm
+  )
+
+  if [ "$FORCE_NO_CACHE" = false ]; then
+    DOCKER_ARGS+=("-v" "$M2_REPO":/root/.m2/repository)
+    echo "📦 Using local Maven cache at $M2_REPO"
+  else
+    echo "🚫 Skipping local Maven cache (forcing fresh dependencies)"
+  fi
+
+  docker run "${DOCKER_ARGS[@]}" \
+    maven:3.9.6-eclipse-temurin-17 mvn clean test
 
   if [ $? -eq 0 ]; then
     echo "✅ Maven tests passed."
