@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
@@ -20,9 +19,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     public Optional<User> findById(UUID id) {
         return jdbcClient.sql("""
-                        SELECT * FROM users
-                        WHERE id = :id
-                        """)
+                SELECT * FROM users
+                WHERE id = :id
+                """)
                 .param("id", id)
                 .query(User.class)
                 .optional();
@@ -31,8 +30,8 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public List<User> findAll(int size, int offset) {
         return jdbcClient.sql("""
-                         SELECT * FROM users LIMIT :size OFFSET :offset
-                        """)
+                 SELECT * FROM users LIMIT :size OFFSET :offset
+                """)
                 .param("size", size)
                 .param("offset", offset)
                 .query(User.class)
@@ -44,11 +43,11 @@ public class UserRepositoryImpl implements UserRepository {
         UUID id = UUID.randomUUID();
 
         jdbcClient.sql("""
-                        INSERT INTO users
-                            (id, name, email, login, password, last_modified_date, active, role)
-                        VALUES
-                            (:id, :name, :email, :login, :password, :last_modified_date, :active, CAST(:role AS role_type));
-                        """)
+                INSERT INTO users
+                    (id, name, email, login, password, last_modified_date, active, role)
+                VALUES
+                    (:id, :name, :email, :login, :password, :last_modified_date, :active, CAST(:role AS role_type));
+                """)
                 .param("id", id)
                 .param("name", user.getName())
                 .param("email", user.getEmail())
@@ -65,12 +64,12 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public boolean existsByEmail(String email) {
         Integer count = jdbcClient.sql("""
-                        SELECT
-                            COUNT(1)
-                        FROM
-                            users
-                        WHERE email = :email
-                        """)
+                SELECT
+                    COUNT(1)
+                FROM
+                    users
+                WHERE email = :email
+                """)
                 .param("email", email)
                 .query(Integer.class)
                 .single();
@@ -78,16 +77,15 @@ public class UserRepositoryImpl implements UserRepository {
         return count > 0;
     }
 
-
     @Override
     public boolean existsByLogin(String login) {
         Integer count = jdbcClient.sql("""
-                        SELECT
-                            COUNT(1)
-                        FROM
-                            users
-                        WHERE login = :login
-                        """)
+                SELECT
+                    COUNT(1)
+                FROM
+                    users
+                WHERE login = :login
+                """)
                 .param("login", login)
                 .query(Integer.class)
                 .single();
@@ -116,6 +114,26 @@ public class UserRepositoryImpl implements UserRepository {
     public void changePassword(UUID id, String password) {
         jdbcClient.sql("UPDATE users SET password = :password, last_modified_date = :last_modified_date WHERE id = :id")
                 .param("id", id)
+                .param("password", password)
+                .param("last_modified_date", new java.sql.Timestamp(new java.util.Date().getTime()))
+                .update();
+    }
+
+    @Override
+    public void update(UUID id, String name, String email, String login, String password) {
+        jdbcClient.sql("""
+                    UPDATE users
+                    SET name = :name,
+                        email = :email,
+                        login = :login,
+                        password = :password,
+                        last_modified_date = :last_modified_date
+                    WHERE id = :id
+                """)
+                .param("id", id)
+                .param("name", name)
+                .param("email", email)
+                .param("login", login)
                 .param("password", password)
                 .param("last_modified_date", new java.sql.Timestamp(new java.util.Date().getTime()))
                 .update();

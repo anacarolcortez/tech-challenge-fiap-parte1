@@ -25,6 +25,35 @@
 			"response": []
 		},
 		{
+			"name": "PUT users",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Lucas Pereira\",\n  \"email\": \"lucas.pereira@email.com\",\n  \"login\": \"lucasp\",\n  \"address\": [\n    {\n      \"zipcode\": \"98765-432\",\n      \"street\": \"Rua das Palmeiras\",\n      \"number\": 112,\n      \"complement\": \"Apto 402\",\n      \"neighborhood\": \"Boa Vista\",\n      \"city\": \"São Paulo\",\n      \"state\": \"SP\"\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/users/{id}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"{id}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "ACTIVATE/DEACTIVATE users",
 			"request": {
 				"method": "PATCH",

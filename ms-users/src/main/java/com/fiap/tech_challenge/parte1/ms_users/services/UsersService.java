@@ -1,5 +1,7 @@
 package com.fiap.tech_challenge.parte1.ms_users.services;
 
+import com.fiap.tech_challenge.parte1.ms_users.dtos.UpdateUserDTO;
+import com.fiap.tech_challenge.parte1.ms_users.dtos.AddressRequestDTO;
 import com.fiap.tech_challenge.parte1.ms_users.dtos.ChangePasswordRequestDTO;
 import com.fiap.tech_challenge.parte1.ms_users.dtos.UsersRequestDTO;
 import com.fiap.tech_challenge.parte1.ms_users.dtos.UsersResponseDTO;
@@ -31,7 +33,8 @@ public class UsersService {
     private final UsersValidationService usersValidationService;
     private final PasswordValidationService passwordValidationService;
 
-    public UsersService(UserRepository userRepository, UserMapper userMapper, AddressesService addressesService, UsersValidationService usersValidationService, PasswordValidationService passwordValidationService) {
+    public UsersService(UserRepository userRepository, UserMapper userMapper, AddressesService addressesService,
+            UsersValidationService usersValidationService, PasswordValidationService passwordValidationService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.addressesService = addressesService;
@@ -78,8 +81,7 @@ public class UsersService {
                 dto.email(),
                 dto.login(),
                 dto.password(),
-                Role.valueOf(dto.role())
-        );
+                Role.valueOf(dto.role()));
         return userRepository.save(user);
     }
 
@@ -104,7 +106,30 @@ public class UsersService {
         passwordValidationService.validate(dto, user.getPassword());
         userRepository.changePassword(id, dto.newPassword());
     }
+
+    @Transactional
+    public UsersResponseDTO updateUser(UUID id, UpdateUserDTO dto) {
+
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User with id %s not found.".formatted(id)));
+
+        userRepository.update(
+                existingUser.getId(),
+                dto.name(),
+                dto.email(),
+                dto.login(),
+                existingUser.getPassword());
+
+        if (dto.address() != null && !dto.address().isEmpty()) {
+            addressesService.update(dto.address(), existingUser.getId());
+        }
+
+        User updatedUser = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User with id %s not found.".formatted(id)));
+
+        List<Address> updatedAddresses = addressesService.findAllByUserId(id);
+        updatedUser.setAddress(updatedAddresses);
+
+        return userMapper.toResponseDTO(updatedUser);
+    }
 }
-
-
-
