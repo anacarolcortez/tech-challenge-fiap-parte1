@@ -21,20 +21,20 @@ public class AddressesRepositoryImpl implements AddressesRepository {
     @Override
     public List<Address> findAllByUserId(UUID userId) {
         return jdbcClient.sql("""
-                            SELECT
-                                id,
-                                zipcode,
-                                street,
-                                number,
-                                complement,
-                                neighborhood,
-                                city,
-                                state,
-                                user_id
-                            FROM
-                                address
-                            WHERE user_id = :userId
-                        """)
+                    SELECT
+                        id,
+                        zipcode,
+                        street,
+                        number,
+                        complement,
+                        neighborhood,
+                        city,
+                        state,
+                        user_id
+                    FROM
+                        address
+                    WHERE user_id = :userId
+                """)
                 .param("userId", userId)
                 .query(Address.class)
                 .list();
@@ -45,12 +45,12 @@ public class AddressesRepositoryImpl implements AddressesRepository {
     public void save(@NotEmpty List<AddressRequestDTO> addresses, UUID generatedUserId) {
         for (AddressRequestDTO address : addresses) {
             jdbcClient.sql("""
-                                INSERT INTO address (
-                                    user_id, zipcode, street, number, complement, neighborhood, city, state
-                                ) VALUES (
-                                    :user_id, :zipcode, :street, :number, :complement, :neighborhood, :city, :state
-                                );
-                            """)
+                        INSERT INTO address (
+                            user_id, zipcode, street, number, complement, neighborhood, city, state
+                        ) VALUES (
+                            :user_id, :zipcode, :street, :number, :complement, :neighborhood, :city, :state
+                        );
+                    """)
                     .param("user_id", generatedUserId)
                     .param("zipcode", address.zipcode())
                     .param("street", address.street())
@@ -100,5 +100,11 @@ public class AddressesRepositoryImpl implements AddressesRepository {
                 .list();
     }
 
+    @Override
+    public void deleteByUserId(UUID userId) {
+        jdbcClient.sql("DELETE FROM address WHERE user_id = :userId")
+                .param("userId", userId)
+                .update();
+    }
 
 }
