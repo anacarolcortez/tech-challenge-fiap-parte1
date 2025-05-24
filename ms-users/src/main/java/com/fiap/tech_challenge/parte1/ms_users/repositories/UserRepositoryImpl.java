@@ -2,6 +2,7 @@ package com.fiap.tech_challenge.parte1.ms_users.repositories;
 
 import com.fiap.tech_challenge.parte1.ms_users.entities.User;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,6 +27,20 @@ public class UserRepositoryImpl implements UserRepository {
                 .param("id", id)
                 .query(User.class)
                 .optional();
+    }
+
+    @Override
+    public UserDetails findByLogin(String login) {
+        if(existsByLogin(login)) {
+            return jdbcClient.sql("""
+                            SELECT * FROM users
+                            WHERE login= :login
+                            """)
+                    .param("login", login)
+                    .query(UserDetails.class)
+                    .single();
+        }
+        return null;
     }
 
     @Override
