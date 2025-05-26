@@ -89,8 +89,8 @@ public class User implements UserDetails {
         return dateLastChange;
     }
 
-    public List<Address> getAddress() {
-        return address;
+    public Address getMainAddress() {
+        return address.get(0);
     }
 
     public Boolean getActive() {
