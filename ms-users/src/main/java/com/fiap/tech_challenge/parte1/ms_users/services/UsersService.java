@@ -6,13 +6,13 @@ import com.fiap.tech_challenge.parte1.ms_users.dtos.UsersResponseDTO;
 import com.fiap.tech_challenge.parte1.ms_users.entities.Address;
 import com.fiap.tech_challenge.parte1.ms_users.entities.Role;
 import com.fiap.tech_challenge.parte1.ms_users.entities.User;
-import com.fiap.tech_challenge.parte1.ms_users.exceptions.InvalidPasswordException;
 import com.fiap.tech_challenge.parte1.ms_users.exceptions.UserNotFoundException;
 import com.fiap.tech_challenge.parte1.ms_users.mappers.UserMapper;
 import com.fiap.tech_challenge.parte1.ms_users.repositories.UserRepository;
 import com.fiap.tech_challenge.parte1.ms_users.services.validation.PasswordValidationService;
 import com.fiap.tech_challenge.parte1.ms_users.services.validation.UsersValidationService;
 import jakarta.validation.Valid;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,13 +30,15 @@ public class UsersService {
     private final AddressesService addressesService;
     private final UsersValidationService usersValidationService;
     private final PasswordValidationService passwordValidationService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsersService(UserRepository userRepository, UserMapper userMapper, AddressesService addressesService, UsersValidationService usersValidationService, PasswordValidationService passwordValidationService) {
+    public UsersService(UserRepository userRepository, UserMapper userMapper, AddressesService addressesService, UsersValidationService usersValidationService, PasswordValidationService passwordValidationService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.addressesService = addressesService;
         this.usersValidationService = usersValidationService;
         this.passwordValidationService = passwordValidationService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UsersResponseDTO findById(UUID id) {
@@ -73,11 +75,14 @@ public class UsersService {
 
     private UUID handleUserCreation(UsersRequestDTO dto) {
         usersValidationService.validateAll(dto);
+
+        String encodedPassword = passwordEncoder.encode(dto.password());
+
         User user = new User(
                 dto.name(),
                 dto.email(),
                 dto.login(),
-                dto.password(),
+                encodedPassword,
                 Role.valueOf(dto.role())
         );
         return userRepository.save(user);

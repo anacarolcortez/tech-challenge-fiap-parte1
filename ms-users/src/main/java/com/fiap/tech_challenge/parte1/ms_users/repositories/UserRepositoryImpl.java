@@ -2,9 +2,10 @@ package com.fiap.tech_challenge.parte1.ms_users.repositories;
 
 import com.fiap.tech_challenge.parte1.ms_users.entities.User;
 import org.springframework.jdbc.core.simple.JdbcClient;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,18 +31,16 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public UserDetails findByLogin(String login) {
-        if(existsByLogin(login)) {
-            return jdbcClient.sql("""
-                            SELECT * FROM users
-                            WHERE login= :login
-                            """)
-                    .param("login", login)
-                    .query(UserDetails.class)
-                    .single();
-        }
-        return null;
+    public Optional<User> findByLogin(String login) {
+        return jdbcClient.sql("""
+                        SELECT * FROM users
+                        WHERE login = :login
+                        """)
+                .param("login", login)
+                .query(User.class)
+                .optional();
     }
+
 
     @Override
     public List<User> findAll(int size, int offset) {
@@ -114,7 +113,7 @@ public class UserRepositoryImpl implements UserRepository {
         jdbcClient.sql("UPDATE users SET active = :active, last_modified_date = :last_modified_date WHERE id = :id")
                 .param("id", id)
                 .param("active", false)
-                .param("last_modified_date", new java.sql.Timestamp(new java.util.Date().getTime()))
+                .param("last_modified_date", now())
                 .update();
     }
 
@@ -123,7 +122,7 @@ public class UserRepositoryImpl implements UserRepository {
         jdbcClient.sql("UPDATE users SET active = :active, last_modified_date = :last_modified_date WHERE id = :id")
                 .param("id", id)
                 .param("active", true)
-                .param("last_modified_date", new java.sql.Timestamp(new java.util.Date().getTime()))
+                .param("last_modified_date", now())
                 .update();
     }
 
@@ -132,8 +131,13 @@ public class UserRepositoryImpl implements UserRepository {
         jdbcClient.sql("UPDATE users SET password = :password, last_modified_date = :last_modified_date WHERE id = :id")
                 .param("id", id)
                 .param("password", password)
-                .param("last_modified_date", new java.sql.Timestamp(new java.util.Date().getTime()))
+                .param("last_modified_date", now())
                 .update();
     }
+
+    private Timestamp now() {
+        return Timestamp.from(Instant.now());
+    }
+
 
 }
