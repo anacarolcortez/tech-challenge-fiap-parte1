@@ -3,7 +3,6 @@ package com.fiap.tech_challenge.parte1.ms_users.repositories;
 import com.fiap.tech_challenge.parte1.ms_users.entities.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +12,7 @@ public interface UserRepository {
 
     Optional<User> findById(UUID id);
 
-    UserDetails findByLogin(String login);
+    Optional<User> findByLogin(String login);
 
     List<User> findAll(int size, int offset);
 
