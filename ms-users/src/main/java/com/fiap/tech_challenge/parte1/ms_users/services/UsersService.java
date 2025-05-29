@@ -106,8 +106,14 @@ public class UsersService {
         User user = userRepository
                 .findById(id)
                 .orElseThrow(() -> new UserNotFoundException(String.format("Usuário com id %s não encontrado.", id)));
-        passwordValidationService.validate(dto, user.getPassword());
-        userRepository.changePassword(id, dto.newPassword());
+
+        // Check if old password matches
+        boolean oldPasswordMatches = passwordEncoder.matches(dto.oldPassword(), user.getPassword());
+        // Check if new password is same as old one (in plaintext)
+        boolean isSameAsOld = dto.oldPassword().equals(dto.newPassword());
+        passwordValidationService.validate(oldPasswordMatches, isSameAsOld);
+        String newPasswordEncoded = passwordEncoder.encode(dto.newPassword());
+        userRepository.changePassword(id, newPasswordEncoded);
     }
 }
 
