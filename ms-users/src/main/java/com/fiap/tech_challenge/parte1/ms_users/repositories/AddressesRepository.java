@@ -9,8 +9,13 @@ import java.util.Set;
 import java.util.UUID;
 
 public interface AddressesRepository {
+
     List<Address> findAllByUserId(UUID userId);
+
     void save(@NotEmpty List<AddressRequestDTO> address, UUID generatedUserId);
 
     List<Address> findAllByUserIds(Set<UUID> userIdSet);
+
+    void deleteByUserId(UUID id);
+
 }

@@ -25,7 +25,8 @@ public class AddressesService {
         return addressesRepository.findAllByUserId(userId);
     }
 
-    public void save(@NotEmpty(message = "User must have at least one Address") List<AddressRequestDTO> address, UUID generatedUserId) {
+    public void save(@NotEmpty(message = "User must have at least one Address") List<AddressRequestDTO> address,
+            UUID generatedUserId) {
         addressesRepository.save(address, generatedUserId);
     }
 
@@ -35,4 +36,8 @@ public class AddressesService {
                 .collect(Collectors.groupingBy(Address::getUserId));
     }
 
+    public void update(List<AddressRequestDTO> addressDTOs, UUID userId) {
+        addressesRepository.deleteByUserId(userId);
+        addressesRepository.save(addressDTOs, userId);
+    }
 }

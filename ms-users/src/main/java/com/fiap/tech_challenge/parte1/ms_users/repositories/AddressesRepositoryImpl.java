@@ -5,6 +5,7 @@ import com.fiap.tech_challenge.parte1.ms_users.entities.Address;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -41,7 +42,7 @@ public class AddressesRepositoryImpl implements AddressesRepository {
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.MANDATORY)
     public void save(@NotEmpty List<AddressRequestDTO> addresses, UUID generatedUserId) {
         for (AddressRequestDTO address : addresses) {
             jdbcClient.sql("""
@@ -100,5 +101,12 @@ public class AddressesRepositoryImpl implements AddressesRepository {
                 .list();
     }
 
+    @Override
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void deleteByUserId(UUID userId) {
+        jdbcClient.sql("DELETE FROM address WHERE user_id = :userId")
+                .param("userId", userId)
+                .update();
+    }
 
 }

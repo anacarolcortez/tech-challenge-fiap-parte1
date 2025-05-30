@@ -9,15 +9,16 @@ import java.util.List;
 @Component
 public class UsersValidationService {
 
-    private final List<UserValidator> validators;
+    private final List<UserValidator> userCreationValidators;
 
-    public UsersValidationService(List<UserValidator> validators) {
-        this.validators = validators;
+    public UsersValidationService(List<UserValidator> userCreationValidators) {
+        this.userCreationValidators = userCreationValidators;
     }
 
     public void validateAll(UsersRequestDTO dto) {
-        for (UserValidator validator : validators) {
+        for (UserValidator validator : userCreationValidators) {
             validator.validate(dto);
         }
     }
+
 }

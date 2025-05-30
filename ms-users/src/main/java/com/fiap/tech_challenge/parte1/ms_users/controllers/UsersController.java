@@ -50,10 +50,10 @@ public class UsersController {
     }
 
     @PostMapping
-    public ResponseEntity<TokenJWTInfoDTO> create(@RequestBody @Valid UsersRequestDTO dto) {
+    public ResponseEntity<CreateUserDTO> create(@RequestBody @Valid UsersRequestDTO dto) {
         logger.info("/createUser -> {}", dto);
-        service.createUser(dto);
-        return ResponseEntity.ok(new TokenJWTInfoDTO(tokenService.generateToken(dto.login())));
+        UsersResponseDTO user = service.createUser(dto);
+        return ResponseEntity.ok(new CreateUserDTO(user, tokenService.generateToken(dto.login())));
     }
 
     @PostMapping("/login")
@@ -91,4 +91,14 @@ public class UsersController {
         service.changePassword(id, dto);
         return ResponseEntity.ok("Senha alterada com sucesso!");
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UsersResponseDTO> updateUser(
+            @PathVariable UUID id,
+            @RequestBody @Valid UpdateUserDTO dto) {
+        logger.info("/updateUser -> id: {}, body: {}", id, dto);
+        var updatedUser = service.updateUser(id, dto);
+        return ResponseEntity.ok(updatedUser);
+    }
+
 }
