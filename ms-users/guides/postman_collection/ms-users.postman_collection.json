@@ -274,6 +274,71 @@
 						"url": "{{base_url}}/users/login"
 					},
 					"response": []
+				},
+				{
+					"name": "POST users type CLIENT - 201",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();",
+									"pm.environment.set(\"jwt_token\", jsonData.tokenJWT);",
+									"pm.environment.set(\"id\", jsonData.user.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Madonna\",\r\n  \"email\": \"madonna@email.com\",\r\n  \"login\": \"madonna\",\r\n  \"password\": \"SenhaForte123!\",\r\n  \"role\": \"OWNER\",\r\n  \"address\": [\r\n    {\r\n      \"zipcode\": \"12345-678\",\r\n      \"street\": \"Av. Brasil\",\r\n      \"number\": 250,\r\n      \"complement\": \"Casa 1\",\r\n      \"neighborhood\": \"Centro\",\r\n      \"city\": \"Rio de Janeiro\",\r\n      \"state\": \"RJ\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/users"
+					},
+					"response": []
+				},
+				{
+					"name": "GET users AS CLIENT (forbidden)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/users?page=1&size=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -316,7 +381,8 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							""
+							"let jsonData = pm.response.json();",
+							"pm.environment.set(\"tokenJWT\", jsonData.tokenJWT);"
 						],
 						"type": "text/javascript",
 						"packages": {}
