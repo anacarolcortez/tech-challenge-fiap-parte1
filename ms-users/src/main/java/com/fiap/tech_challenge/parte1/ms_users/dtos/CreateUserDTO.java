@@ -1,0 +1,7 @@
+package com.fiap.tech_challenge.parte1.ms_users.dtos;
+
+public record CreateUserDTO(
+        UsersResponseDTO user,
+        String tokenJWT
+) {
+}

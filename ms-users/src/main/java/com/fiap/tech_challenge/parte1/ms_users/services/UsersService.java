@@ -1,11 +1,14 @@
 package com.fiap.tech_challenge.parte1.ms_users.services;
 
 import com.fiap.tech_challenge.parte1.ms_users.dtos.ChangePasswordRequestDTO;
+import com.fiap.tech_challenge.parte1.ms_users.dtos.UpdateUserDTO;
 import com.fiap.tech_challenge.parte1.ms_users.dtos.UsersRequestDTO;
 import com.fiap.tech_challenge.parte1.ms_users.dtos.UsersResponseDTO;
 import com.fiap.tech_challenge.parte1.ms_users.entities.Address;
 import com.fiap.tech_challenge.parte1.ms_users.entities.Role;
 import com.fiap.tech_challenge.parte1.ms_users.entities.User;
+import com.fiap.tech_challenge.parte1.ms_users.exceptions.EmailAlreadyExistsException;
+import com.fiap.tech_challenge.parte1.ms_users.exceptions.LoginAlreadyExistsException;
 import com.fiap.tech_challenge.parte1.ms_users.exceptions.UserNotFoundException;
 import com.fiap.tech_challenge.parte1.ms_users.mappers.UserMapper;
 import com.fiap.tech_challenge.parte1.ms_users.repositories.UserRepository;
@@ -62,9 +65,10 @@ public class UsersService {
     }
 
     @Transactional
-    public void createUser(UsersRequestDTO dto) {
+    public UsersResponseDTO createUser(UsersRequestDTO dto) {
         UUID generatedUserId = handleUserCreation(dto);
         handleUserRelatedAddressCreation(dto, generatedUserId);
+        return findById(generatedUserId);
     }
 
     private void handleUserRelatedAddressCreation(UsersRequestDTO dto, UUID generatedUserId) {
@@ -115,7 +119,33 @@ public class UsersService {
         String newPasswordEncoded = passwordEncoder.encode(dto.newPassword());
         userRepository.changePassword(id, newPasswordEncoded);
     }
+
+    @Transactional
+    public UsersResponseDTO updateUser(UUID id, UpdateUserDTO dto) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User with id %s not found.".formatted(id)));
+        userUpdateValidations(dto, existingUser);
+        userRepository.update(
+                existingUser.getId(),
+                dto.name(),
+                dto.email(),
+                dto.login(),
+                existingUser.getPassword());
+
+        if (dto.address() != null && !dto.address().isEmpty()) {
+            addressesService.update(dto.address(), existingUser.getId());
+        }
+
+        return findById(id);
+    }
+
+    private void userUpdateValidations(UpdateUserDTO dto, User existingUser) {
+        if (userRepository.emailAlreadyExistsForDifferentUsers(dto.email(), existingUser.getId())) {
+            throw new EmailAlreadyExistsException("O e-mail informado já está em uso.");
+        }
+
+        if (userRepository.loginAlreadyExistsForDifferentUsers(dto.login(), existingUser.getId())) {
+            throw new LoginAlreadyExistsException("O login informado já está em uso.");
+        }
+    }
 }
-
-
-

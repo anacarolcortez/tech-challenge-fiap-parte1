@@ -31,6 +31,35 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public boolean emailAlreadyExistsForDifferentUsers(String email, UUID id) {
+        return jdbcClient.sql("""
+                            SELECT 1 FROM users
+                            WHERE email = :email AND id <> :id
+                            LIMIT 1
+                        """)
+                .param("email", email)
+                .param("id", id)
+                .query()
+                .optionalValue()
+                .isPresent();
+    }
+
+    @Override
+    public boolean loginAlreadyExistsForDifferentUsers(String login, UUID id) {
+        return jdbcClient.sql("""
+                            SELECT 1 FROM users
+                            WHERE login = :login AND id <> :id
+                            LIMIT 1
+                        """)
+                .param("login", login)
+                .param("id", id)
+                .query()
+                .optionalValue()
+                .isPresent();
+    }
+
+
+    @Override
     public Optional<User> findByLogin(String login) {
         return jdbcClient.sql("""
                         SELECT * FROM users
@@ -40,7 +69,6 @@ public class UserRepositoryImpl implements UserRepository {
                 .query(User.class)
                 .optional();
     }
-
 
     @Override
     public List<User> findAll(int size, int offset) {
@@ -132,6 +160,26 @@ public class UserRepositoryImpl implements UserRepository {
                 .param("id", id)
                 .param("password", password)
                 .param("last_modified_date", now())
+                .update();
+    }
+
+    @Override
+    public void update(UUID id, String name, String email, String login, String password) {
+        jdbcClient.sql("""
+                            UPDATE users
+                            SET name = :name,
+                                email = :email,
+                                login = :login,
+                                password = :password,
+                                last_modified_date = :last_modified_date
+                            WHERE id = :id
+                        """)
+                .param("id", id)
+                .param("name", name)
+                .param("email", email)
+                .param("login", login)
+                .param("password", password)
+                .param("last_modified_date", new java.sql.Timestamp(new java.util.Date().getTime()))
                 .update();
     }
 

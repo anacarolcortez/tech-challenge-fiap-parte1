@@ -12,13 +12,20 @@ public interface UserRepository {
 
     Optional<User> findById(UUID id);
 
+    boolean emailAlreadyExistsForDifferentUsers(@Email String email, @org.hibernate.validator.constraints.UUID UUID uuid);
+
+    boolean loginAlreadyExistsForDifferentUsers(@Email String login, @org.hibernate.validator.constraints.UUID UUID uuid);
+
     Optional<User> findByLogin(String login);
 
     List<User> findAll(int size, int offset);
 
     UUID save(User user);
 
-    boolean existsByEmail(@NotBlank(message = "User field 'email' is required") @Email(message = "User field 'email' must be a valid email address") String email);
+    void update(UUID id, String name, String email, String login, String password);
+
+    boolean existsByEmail(
+            @NotBlank(message = "User field 'email' is required") @Email(message = "User field 'email' must be a valid email address") String email);
 
     boolean existsByLogin(@NotBlank(message = "User field 'login' is required") String login);
 

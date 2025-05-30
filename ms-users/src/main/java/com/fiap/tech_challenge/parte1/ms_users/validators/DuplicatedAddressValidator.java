@@ -15,9 +15,11 @@ public class DuplicatedAddressValidator implements UserValidator {
     @Override
     public void validate(UsersRequestDTO dto) {
         List<AddressRequestDTO> addresses = dto.address();
+        validateAddress(addresses);
+    }
 
+    public void validateAddress(List<AddressRequestDTO> addresses) {
         Set<String> uniqueAddressKeys = new HashSet<>();
-
         for (AddressRequestDTO address : addresses) {
             String key = generateAddressKey(address);
 
@@ -29,7 +31,7 @@ public class DuplicatedAddressValidator implements UserValidator {
         }
     }
 
-    private String generateAddressKey(AddressRequestDTO address) {
+    public String generateAddressKey(AddressRequestDTO address) {
         return String.join("|",
                 normalize(address.zipcode()),
                 normalize(address.street()),
@@ -44,4 +46,5 @@ public class DuplicatedAddressValidator implements UserValidator {
     private String normalize(String value) {
         return value == null ? "" : value.trim().toLowerCase();
     }
+
 }
