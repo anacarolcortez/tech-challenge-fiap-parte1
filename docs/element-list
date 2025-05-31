@@ -1,0 +1,11 @@
+com.fiap.tech_challenge.parte1.ms_users
+com.fiap.tech_challenge.parte1.ms_users.controllers
+com.fiap.tech_challenge.parte1.ms_users.dtos
+com.fiap.tech_challenge.parte1.ms_users.entities
+com.fiap.tech_challenge.parte1.ms_users.exceptions
+com.fiap.tech_challenge.parte1.ms_users.infra.security
+com.fiap.tech_challenge.parte1.ms_users.mappers
+com.fiap.tech_challenge.parte1.ms_users.repositories
+com.fiap.tech_challenge.parte1.ms_users.services
+com.fiap.tech_challenge.parte1.ms_users.services.validation
+com.fiap.tech_challenge.parte1.ms_users.validators
