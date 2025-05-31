@@ -1,4 +1,4 @@
-# 🧩 ms-user
+# 🧩 ms-users
 
 Este projeto é um microsserviço backend desenvolvido em Spring Boot, responsável pelo gerenciamento de usuários dentro da arquitetura do sistema proposto no Tech Challenge - Fase 1 da FIAP.
 
