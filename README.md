@@ -322,3 +322,13 @@ Base path: `/users`
 ## 📄 Licença
 
 Este projeto é parte de um desafio educacional da FIAP. Uso livre para fins acadêmicos.
+
+## Java Docs
+
+[Documentação Java Docs](https://anacarolcortez.github.io/tech-challenge-fiap-parte1/)
+
+## Open API
+
+Após executar o sistema localmente, via Docker, é possível acessar a documentação das APIs também pelo Open API, em adição ao Postman.
+O link de acesso é:
+http://localhost:8080/swagger-ui/index.html
