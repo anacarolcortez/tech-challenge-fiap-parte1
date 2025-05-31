@@ -2,7 +2,6 @@ package com.fiap.tech_challenge.parte1.ms_users.controllers;
 
 import com.fiap.tech_challenge.parte1.ms_users.dtos.*;
 import com.fiap.tech_challenge.parte1.ms_users.entities.User;
-import com.fiap.tech_challenge.parte1.ms_users.dtos.TokenJWTInfoDTO;
 import com.fiap.tech_challenge.parte1.ms_users.services.TokenService;
 import com.fiap.tech_challenge.parte1.ms_users.services.UsersService;
 import jakarta.validation.Valid;
@@ -17,6 +16,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * REST controller for managing users.
+ * <p>
+ * Provides endpoints to create, update, retrieve, activate/deactivate users,
+ * and handle authentication-related operations.
+ * </p>
+ */
 @RestController
 @RequestMapping("/users")
 public class UsersController {
@@ -33,12 +39,25 @@ public class UsersController {
         this.authenticationManager = authenticationManager;
     }
 
+    /**
+     * Retrieves a user by their unique ID.
+     *
+     * @param id UUID of the user to retrieve
+     * @return ResponseEntity containing the user data if found
+     */
     @GetMapping("/{id}")
     public ResponseEntity<UsersResponseDTO> getById(@PathVariable UUID id) {
         logger.info("/findById -> {}", id);
         return ResponseEntity.ok(service.findById(id));
     }
 
+    /**
+     * Retrieves a paginated list of users.
+     *
+     * @param size number of users per page
+     * @param page page index (zero-based)
+     * @return ResponseEntity with the list of users
+     */
     @GetMapping
     public ResponseEntity<List<UsersResponseDTO>> findAllUsers(
             @RequestParam int size,
@@ -49,6 +68,12 @@ public class UsersController {
         return ResponseEntity.ok(allUsers);
     }
 
+    /**
+     * Creates a new user.
+     *
+     * @param dto User creation request data validated automatically
+     * @return ResponseEntity containing the created user and a generated JWT token
+     */
     @PostMapping
     public ResponseEntity<CreateUserDTO> create(@RequestBody @Valid UsersRequestDTO dto) {
         logger.info("/createUser -> {}", dto);
@@ -56,6 +81,12 @@ public class UsersController {
         return ResponseEntity.ok(new CreateUserDTO(user, tokenService.generateToken(dto.login())));
     }
 
+    /**
+     * Authenticates a user and returns a JWT token if successful.
+     *
+     * @param data User login credentials validated automatically
+     * @return ResponseEntity containing the JWT token
+     */
     @PostMapping("/login")
     public ResponseEntity<TokenJWTInfoDTO> executeLogin(@RequestBody @Valid AuthenticationDataDTO data) {
         logger.info("/login -> {}", data);
@@ -66,6 +97,13 @@ public class UsersController {
         return ResponseEntity.ok(new TokenJWTInfoDTO(tokenJWT));
     }
 
+    /**
+     * Toggles user activation status.
+     *
+     * @param id       UUID of the user to activate/deactivate
+     * @param activate true to activate, false to deactivate
+     * @return ResponseEntity with confirmation message
+     */
     @PatchMapping("/{id}")
     public ResponseEntity<String> toggleActivation(
             @PathVariable UUID id,
@@ -82,6 +120,13 @@ public class UsersController {
         }
     }
 
+    /**
+     * Changes the password of a user.
+     *
+     * @param id  UUID of the user whose password is to be changed
+     * @param dto Change password request containing old and new passwords
+     * @return ResponseEntity with confirmation message
+     */
     @PatchMapping("/{id}/password")
     public ResponseEntity<String> changePassword(
             @PathVariable UUID id,
@@ -92,6 +137,13 @@ public class UsersController {
         return ResponseEntity.ok("Senha alterada com sucesso!");
     }
 
+    /**
+     * Updates user details.
+     *
+     * @param id  UUID of the user to update
+     * @param dto Update user request data validated automatically
+     * @return ResponseEntity containing the updated user data
+     */
     @PutMapping("/{id}")
     public ResponseEntity<UsersResponseDTO> updateUser(
             @PathVariable UUID id,
