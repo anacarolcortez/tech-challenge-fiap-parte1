@@ -27,6 +27,17 @@ A aplicação tem como objetivo oferecer suporte ao cadastro, atualização, exc
 - Docker
 - Docker Compose
 
+### Variáveis de ambiente
+
+É necessário criar um arquivo ".env" na pasta ms-users, com o acesso ao banco de dados:
+
+```
+DB_USER=
+DB_PASS=
+```
+
+Como o sistema será executado localmente, não há credencial fixa para o projeto. 
+
 ### Subindo os serviços
 
 ```bash
