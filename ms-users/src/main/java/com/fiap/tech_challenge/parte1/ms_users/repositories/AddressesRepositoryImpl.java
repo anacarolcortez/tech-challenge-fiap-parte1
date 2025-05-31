@@ -10,15 +10,30 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+/**
+ * Implementation of the AddressesRepository interface using JdbcClient to perform database operations.
+ * This repository handles CRUD operations related to Address entities tied to users.
+ */
 @Repository
 public class AddressesRepositoryImpl implements AddressesRepository {
 
     private final JdbcClient jdbcClient;
 
+    /**
+     * Constructs an AddressesRepositoryImpl with the given JdbcClient.
+     *
+     * @param jdbcClient the JdbcClient used to execute SQL queries
+     */
     public AddressesRepositoryImpl(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 
+    /**
+     * Retrieves all addresses associated with the specified user ID.
+     *
+     * @param userId the UUID of the user whose addresses will be retrieved
+     * @return a list of Address entities related to the given userId
+     */
     @Override
     public List<Address> findAllByUserId(UUID userId) {
         return jdbcClient.sql("""
@@ -41,6 +56,12 @@ public class AddressesRepositoryImpl implements AddressesRepository {
                 .list();
     }
 
+    /**
+     * Saves a list of address DTOs for a given user ID. This operation requires an existing transaction.
+     *
+     * @param addresses      a non-empty list of AddressRequestDTOs to be saved
+     * @param generatedUserId the UUID of the user to associate with these addresses
+     */
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public void save(@NotEmpty List<AddressRequestDTO> addresses, UUID generatedUserId) {
@@ -64,13 +85,20 @@ public class AddressesRepositoryImpl implements AddressesRepository {
         }
     }
 
+    /**
+     * Retrieves all addresses for a given set of user IDs.
+     * If the provided set is null or empty, returns an empty list.
+     *
+     * @param userIdSet a set of UUIDs representing user IDs
+     * @return a list of Address entities related to the provided user IDs
+     */
     @Override
     public List<Address> findAllByUserIds(Set<UUID> userIdSet) {
         if (userIdSet == null || userIdSet.isEmpty()) {
             return List.of();
         }
 
-        // Gera a lista de placeholders :id0, :id1, ...
+        // Generate placeholders like :id0, :id1, ...
         List<String> placeholders = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         int index = 0;
@@ -101,6 +129,12 @@ public class AddressesRepositoryImpl implements AddressesRepository {
                 .list();
     }
 
+    /**
+     * Deletes all addresses associated with the specified user ID.
+     * This operation requires an existing transaction.
+     *
+     * @param userId the UUID of the user whose addresses will be deleted
+     */
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public void deleteByUserId(UUID userId) {
