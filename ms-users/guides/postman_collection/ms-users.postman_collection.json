@@ -382,7 +382,7 @@
 					"script": {
 						"exec": [
 							"let jsonData = pm.response.json();",
-							"pm.environment.set(\"tokenJWT\", jsonData.tokenJWT);"
+							"pm.environment.set(\"jwt_token\", jsonData.tokenJWT);"
 						],
 						"type": "text/javascript",
 						"packages": {}
